@@ -6,6 +6,10 @@ window.onload = () => {
     init();
 };
 
+// TODO design
+// TODO SOUND PAUSE, LOWER SOUND ETC
+// TODO OPTION FOR stereo sound, half load left channel colour red, half load right channel colour blue
+
 function init() {
 
     audioPlayer = new Audio();
@@ -44,5 +48,11 @@ function loop() {
     // Render the visualization
     FFT.render();
 
+    // Draw Audio Time / PlayingOffset
+    const mark = toInt(audioPlayer.currentTime);
+    const total = toInt(audioPlayer.duration);
+    drawFillText(`Time: ${mark}s - ${total}s`, 16, 48, 32, 'white');
+
+    // Create infinite loop
     window.requestAnimationFrame(loop);
 }
