@@ -53,6 +53,10 @@ function loop() {
     const total = toInt(audioPlayer.duration);
     drawFillText(`Time: ${mark}s - ${total}s`, 16, 48, 32, 'white');
 
+    if (mark == total) {
+        location.reload();
+    }
+
     // Create infinite loop
     window.requestAnimationFrame(loop);
 }
