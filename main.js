@@ -27,6 +27,7 @@ function init() {
             FFT.init(this.result);
 
             canvas.style.display = 'block';
+            document.getElementById('audioInput').style.display = 'none';
             window.requestAnimationFrame(loop);
         };
 
