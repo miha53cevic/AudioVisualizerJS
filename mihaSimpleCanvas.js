@@ -121,3 +121,8 @@ function map(s, a1, a2, b1, b2)
 {
 	return b1 + ((s - a1) * (b2 - b1)) / (a2 - a1);
 }
+
+// Takes a value and returns an int
+function toInt(value) {
+    return Number.parseInt(value.toString());
+}
