@@ -1,5 +1,6 @@
 var audioPlayer;
 var FFT;
+var reloaded = false;
 
 window.onload = () => {
     createCanvas(window.innerWidth, window.innerHeight - document.querySelector('nav').clientHeight);
@@ -54,8 +55,9 @@ function loop() {
     const total = toInt(audioPlayer.duration);
     drawFillText(`Time: ${mark}s - ${total}s`, 16, 48, 32, 'white');
 
-    if (mark == total) {
+    if (mark == total && !reloaded) {
         location.reload();
+        reloaded = true;
     }
 
     // Create infinite loop
