@@ -2,8 +2,9 @@ var audioPlayer;
 var FFT;
 
 window.onload = () => {
-    createCanvas(1024, 768);
+    createCanvas(window.innerWidth, window.innerHeight - document.querySelector('nav').clientHeight);
     init();
+    initUI();
 };
 
 // TODO design
@@ -59,4 +60,41 @@ function loop() {
 
     // Create infinite loop
     window.requestAnimationFrame(loop);
+}
+
+function initUI() {
+
+    // Change canvas size on window resize
+    window.onresize = function () {
+        const canvas = document.getElementById('canvas');
+
+        // Get navbar height in pixels
+        const navBarHeight = document.querySelector('nav').clientHeight;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight - navBarHeight;
+
+        WIDTH = canvas.width;
+        HEIGHT = canvas.height;
+    }
+
+    // Setup volume slider
+    const slider = document.getElementById('volume-slider');
+
+    slider.addEventListener('change', function () {
+        audioPlayer.volume = slider.value / 100;
+    });
+
+    // Setup play-pause
+    const playButton = document.getElementById('play-pause-button');
+
+    playButton.addEventListener('click', () => {
+        if (playButton.dataset.playing === 'true') {
+            playButton.dataset.playing = 'false';
+            audioPlayer.pause();
+        } else {
+            playButton.dataset.playing = 'true';
+            audioPlayer.play();
+        }
+    });
 }
