@@ -87,13 +87,16 @@ function initUI() {
 
     // Setup play-pause
     const playButton = document.getElementById('play-pause-button');
+    const icon = document.getElementById('play-pause-icon');
 
     playButton.addEventListener('click', () => {
         if (playButton.dataset.playing === 'true') {
-            playButton.dataset.playing = 'false';
+            playButton.dataset.playing = 'false'
+            icon.className = 'fa fa-play';
             audioPlayer.pause();
         } else {
             playButton.dataset.playing = 'true';
+            icon.className = 'fa fa-pause';
             audioPlayer.play();
         }
     });
