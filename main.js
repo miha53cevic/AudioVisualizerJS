@@ -8,9 +8,8 @@ window.onload = () => {
     initUI();
 };
 
-// TODO design
-// TODO SOUND PAUSE, LOWER SOUND ETC
 // TODO OPTION FOR stereo sound, half load left channel colour red, half load right channel colour blue
+// TODO OPTION FOR looping, changing sampling count
 
 function init() {
 
