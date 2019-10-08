@@ -48,6 +48,16 @@
     input {
         color: white;
     }
+
+    /* Add this otherwise the modal is under the background */
+    .modal-backdrop {
+        z-index: -1;
+    }
+
+    .SpacedTable {
+        border-collapse: separate;
+        border-spacing: 50px 0;
+    }
 </style>
 
 <body>
@@ -71,16 +81,60 @@
 
         <!-- Play button -->
         <div class="mx-auto">
-            <button id="play-pause-button" class="btn btn-lg btn-info text-white" data-playing="true"><i id="play-pause-icon"
-                    class="fa fa-pause"></i></button>
+            <button id="play-pause-button" class="btn btn-lg btn-info text-white" data-playing="true"><i
+                    id="play-pause-icon" class="fa fa-pause"></i></button>
         </div>
 
         <!-- Options button -->
-        <div class="dropup">
-            <button id="settings-button" class="btn btn-lg btn-info text-white dropdown-toggle" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog"></i></button>
+        <button id="settings-button" class="btn btn-lg btn-info text-white" data-toggle="modal"
+            data-target="#optionsModal"><i class="fa fa-cog"></i></button>
 
-            <div class="dropdwon-menu text-center"></div>
+        <!-- Options Modal -->
+        <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsModal"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">OPTIONS</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <table align="center" class="SpacedTable">
+                            <tr>
+                                <td align="left">Split Channels</td>
+                                <td>
+                                    <input type="checkbox" id="SplitChannelsButton">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left">Loop Music</td>
+                                <td>
+                                    <input type="checkbox" id="LoopMusicButton">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left">Sampling Count</td>
+                                <td>
+                                    <input type="number" class="form-control" style="text-align: center" value="16384"
+                                        min="64" max="16384" step="2" id="SamplingCountButton">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left">Quad Size</td>
+                                <td>
+                                    <input type="number" class="form-control" style="text-align: center" value="8"
+                                        min="1" max="100" step="1" id="QuadSizeButton">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </nav>
