@@ -8,9 +8,6 @@ window.onload = () => {
     initUI();
 };
 
-// TODO OPTION FOR stereo sound, half load left channel colour red, half load right channel colour blue
-// TODO OPTION FOR looping, changing sampling count
-
 function init() {
 
     audioPlayer = new Audio();
@@ -47,14 +44,18 @@ function init() {
 function loop() {
 
     // Render the visualization
-    FFT.render();
+    if (FFT.SplitChannels) {
+        FFT.render2Channels();
+    } else {
+        FFT.render();
+    }
 
     // Draw Audio Time / PlayingOffset
     const mark = toInt(audioPlayer.currentTime);
     const total = toInt(audioPlayer.duration);
     drawFillText(`Time: ${mark}s - ${total}s`, 16, 48, 32, 'white');
 
-    if (mark == total && !reloaded) {
+    if (mark == total && !reloaded && !audioPlayer.loop) {
         location.reload();
         reloaded = true;
     }
@@ -100,5 +101,36 @@ function initUI() {
             icon.className = 'fa fa-pause';
             audioPlayer.play();
         }
+    });
+
+    // Setup Options Modal
+    const splitChannel = document.getElementById('SplitChannelsButton');
+    const loopMusic = document.getElementById('LoopMusicButton');
+    const samplingCount = document.getElementById('SamplingCountButton');
+    const quadSize = document.getElementById('QuadSizeButton');
+
+    splitChannel.addEventListener('change', () => {
+        FFT.SplitChannels = splitChannel.checked;
+    });
+
+    loopMusic.addEventListener('change', () => {
+        if (loopMusic.checked) {
+            audioPlayer.loop = true;
+        } else audioPlayer.loop = false;
+    });
+
+    samplingCount.addEventListener('change', () => {
+        if (Number.isInteger(Math.log2(samplingCount.value))) {
+            FFT.N = samplingCount.value;
+        } else alert('The samplingCount must be a power of 2!');
+    });
+
+    quadSize.addEventListener('change', () => {
+        FFT.QUAD_SIZE = quadSize.value;
+    });
+
+    // Disable splitChannel button if song is running
+    audioPlayer.addEventListener('playing', () => {
+        splitChannel.disabled = true;
     });
 }
