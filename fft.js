@@ -49,7 +49,7 @@ class fft {
         });
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     render() {
 
@@ -78,11 +78,13 @@ class fft {
             let peakmaxArray = [];
 
             // Calculate the magnitudes
+            /* Only half of the data is useful */
             for (let i = 0; i < (this.N / 2) + 1; i++) {
 
                 let freq = i * this.source.buffer.sampleRate / this.N;
                 let magnitude = output[i].magnitude();
 
+                // Extract the peaks from defined frequency ranges
                 for (let j = 0; j < this.freq_bin.length - 1; j++) {
                     if ((freq > this.freq_bin[j]) && (freq <= this.freq_bin[j + 1])) {
                         peakmaxArray.push(magnitude);
@@ -91,6 +93,7 @@ class fft {
             }
 
             clear('rgb(51,51,51)');
+
             // Visualize the magnitudes
             for (let i = 0; i < peakmaxArray.length; i++) {
 
@@ -104,7 +107,7 @@ class fft {
         }
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     render2Channels() {
 
@@ -117,23 +120,25 @@ class fft {
             let input2 = Array();
 
             // Fill in input
+            /* Each channel gets half of the sampleCount */
             for (let i = 0; i < (this.N / 2); i++) {
 
                 let index = i + mark;
 
                 // Hamming window the input
-                let sample = this.data[index] * (0.54 - (0.46 * Math.cos(2.0 * Math.PI * (i / ((this.N - 1) * 1.0)))));
+                let sample = this.data[index] * (0.54 - (0.46 * Math.cos(2.0 * Math.PI * (i / (((this.N / 2) - 1) * 1.0)))));
 
                 // Windowed sample / signal
                 input1.push(sample);
             }
 
+            // Input for second channel
             for (let i = 0; i < (this.N / 2); i++) {
 
                 let index = i + mark;
 
                 // Hamming window the input
-                let sample = this.data2[index] * (0.54 - (0.46 * Math.cos(2.0 * Math.PI * (i / ((this.N - 1) * 1.0)))));
+                let sample = this.data2[index] * (0.54 - (0.46 * Math.cos(2.0 * Math.PI * (i / (((this.N / 2) - 1) * 1.0)))));
 
                 // Windowed sample / signal
                 input2.push(sample);
@@ -147,6 +152,9 @@ class fft {
             let peakmaxArray2 = [];
 
             // Calculate the magnitudes
+            /* Only half of the magnitudes are valuable data
+               since we have 2 channels we have to divide N by 2 and 
+               then divide by 2 again to get the valuable data */
             for (let i = 0; i < (this.N / 4) + 1; i++) {
 
                 let freq = i * this.source.buffer.sampleRate / (this.N / 2);
