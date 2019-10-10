@@ -34,7 +34,7 @@ class fft {
 
             // SplitChannels option
             if (this.SplitChannels) {
-                if (this.source.buffer.getChannelData(1) == undefined) {
+                if (this.source.buffer.numberOfChannels == 1) {
                     this.SplitChannels = false;
                 } else {
                     this.data2 = this.source.buffer.getChannelData(1);
