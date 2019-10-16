@@ -109,14 +109,37 @@ function initUI() {
     const samplingCount = document.getElementById('SamplingCountButton');
     const quadSize = document.getElementById('QuadSizeButton');
 
+    // Check if localstorage exists and load settings if it does
+    const SplitChannelsStorage = window.localStorage.getItem('SplitChannels');
+    const AudioLoopStorage = window.localStorage.getItem('AudioLoop');
+
+    // Undefined = false
+    if (SplitChannelsStorage) {
+        FFT.SplitChannels = toBoolean(SplitChannelsStorage);
+        splitChannel.checked = toBoolean(SplitChannelsStorage);
+    }
+
+    if (AudioLoopStorage) {
+        audioPlayer.loop = toBoolean(AudioLoopStorage);
+        loopMusic.checked = toBoolean(AudioLoopStorage);
+    }
+
+    console.log(window.localStorage);
+
+    // Add eventListeners to the Options
     splitChannel.addEventListener('change', () => {
         FFT.SplitChannels = splitChannel.checked;
+
+        // Save in localStorage
+        window.localStorage.setItem('SplitChannels', splitChannel.checked);
     });
 
     loopMusic.addEventListener('change', () => {
         if (loopMusic.checked) {
             audioPlayer.loop = true;
         } else audioPlayer.loop = false;
+
+        window.localStorage.setItem('AudioLoop', audioPlayer.loop);
     });
 
     samplingCount.addEventListener('change', () => {
