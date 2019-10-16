@@ -126,3 +126,8 @@ function map(s, a1, a2, b1, b2)
 function toInt(value) {
     return Number.parseInt(value.toString());
 }
+
+// Takes a string and returns an int
+function toBoolean(string) {
+    return (string == "true");
+}
