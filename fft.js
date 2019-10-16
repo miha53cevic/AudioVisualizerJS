@@ -45,7 +45,10 @@ class fft {
             // Start player
             this.audioPlayer.play();
 
-            console.log(this.N);
+            console.log(`SampleCount: ${this.N}`);
+            console.log(`SplitChannels: ${this.SplitChannels}`);
+            console.log(`AudioLoop: ${this.audioPlayer.loop}`);
+            console.log(`QuadSize: ${this.QUAD_SIZE}`);
         });
     }
 
