@@ -46,6 +46,8 @@ function loop() {
     // Render the visualization
     if (FFT.SplitChannels) {
         FFT.render2Channels();
+    } else if (FFT.circleMode) {
+        FFT.renderCircleMode();
     } else {
         FFT.render();
     }
@@ -106,22 +108,33 @@ function initUI() {
     // Setup Options Modal
     const splitChannel = document.getElementById('SplitChannelsButton');
     const loopMusic = document.getElementById('LoopMusicButton');
+    const circleMode = document.getElementById('Circle-Button');
     const samplingCount = document.getElementById('SamplingCountButton');
     const quadSize = document.getElementById('QuadSizeButton');
 
     // Check if localstorage exists and load settings if it does
     const SplitChannelsStorage = window.localStorage.getItem('SplitChannels');
     const AudioLoopStorage = window.localStorage.getItem('AudioLoop');
+    const CircleModeStorage = window.localStorage.getItem('CircleMode');
 
     // Undefined = false
-    if (SplitChannelsStorage) {
+    if (toBoolean(SplitChannelsStorage)) {
         FFT.SplitChannels = toBoolean(SplitChannelsStorage);
         splitChannel.checked = toBoolean(SplitChannelsStorage);
+
+        circleMode.disabled = true;
     }
 
-    if (AudioLoopStorage) {
+    if (toBoolean(AudioLoopStorage)) {
         audioPlayer.loop = toBoolean(AudioLoopStorage);
         loopMusic.checked = toBoolean(AudioLoopStorage);
+    }
+
+    if (toBoolean(CircleModeStorage)) {
+        FFT.circleMode = toBoolean(CircleModeStorage);
+        circleMode.checked = toBoolean(CircleModeStorage);
+
+        splitChannel.disabled = true;
     }
 
     console.log(window.localStorage);
@@ -142,6 +155,12 @@ function initUI() {
         window.localStorage.setItem('AudioLoop', audioPlayer.loop);
     });
 
+    circleMode.addEventListener('change', () => {
+        FFT.circleMode = circleMode.checked;
+
+        window.localStorage.setItem('CircleMode', circleMode.checked);
+    });
+
     samplingCount.addEventListener('change', () => {
         if (Number.isInteger(Math.log2(samplingCount.value))) {
             FFT.N = samplingCount.value;
@@ -155,5 +174,25 @@ function initUI() {
     // Disable splitChannel button if song is running
     audioPlayer.addEventListener('playing', () => {
         splitChannel.disabled = true;
+    });
+
+    // Disable splitChannel button if circleMode is activated and turn it off if it's on
+    circleMode.addEventListener('change', () => {
+        if (circleMode.checked) {
+            splitChannel.disabled = true;
+            splitChannel.checked = false;
+        } else {
+            splitChannel.disabled = false;
+        }
+    });
+
+    // Disable circleMode if splitChannel mode is running
+    splitChannel.addEventListener('change', () => {
+        if (splitChannel.checked) {
+            circleMode.disabled = true;
+            circleMode.checked = false;
+        } else {
+            circleMode.disabled = false;
+        }
     });
 }

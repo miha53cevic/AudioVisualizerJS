@@ -11,6 +11,7 @@ class fft {
         this.freq_bin = [20, 60, 250, 500];
 
         this.SplitChannels = false;
+        this.circleMode = false;
     }
 
     init(arrayBuffer) {
@@ -205,6 +206,85 @@ class fft {
 
                 drawFillRect(x, y, this.QUAD_SIZE, -height, 'cyan');
             }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    renderCircleMode() {
+        // Only if this.audioPlayer has started run
+        if (!this.audioPlayer.paused || this.audioPlayer.currentTime) {
+
+            const mark = Number.parseInt((this.audioPlayer.currentTime * this.source.buffer.sampleRate).toString());
+
+            let input = Array();
+
+            // Fill in input
+            for (let i = 0; i < this.N; i++) {
+
+                let index = i + mark;
+
+                // Hamming window the input
+                let sample = this.data[index] * (0.54 - (0.46 * Math.cos(2.0 * Math.PI * (i / ((this.N - 1) * 1.0)))));
+
+                // Windowed sample / signal
+                input.push(sample);
+            }
+
+            // Calculate fft
+            const output = this.cfft(input);
+
+            let peakmaxArray = [];
+
+            // Calculate the magnitudes
+            /* Only half of the data is useful */
+            for (let i = 0; i < (this.N / 2) + 1; i++) {
+
+                let freq = i * this.source.buffer.sampleRate / this.N;
+                let magnitude = output[i].magnitude();
+
+                // Extract the peaks from defined frequency ranges
+                for (let j = 0; j < this.freq_bin.length - 1; j++) {
+                    if ((freq > this.freq_bin[j]) && (freq <= this.freq_bin[j + 1])) {
+                        peakmaxArray.push(magnitude);
+                    }
+                }
+            }
+
+            clear('rgb(51,51,51)');
+
+            // Visualize the magnitudes
+            // Circle formula: x = cx + r * cos(x), y = cy + r * sin(x) ---> cx ili cy = translacija od 0,0
+
+            const cx = WIDTH / 2;
+            const cy = HEIGHT / 2;
+            const angleIncrement = 360 / peakmaxArray.length;
+
+            let linePointArray = [];
+
+            // Uzmi prosjek i dodaj ga radijusu kruga
+            let aprox = 0;
+            for (let i = 0; i < peakmaxArray.length; i++) {
+                aprox += peakmaxArray[i];
+            }
+            aprox /= peakmaxArray.length;
+
+            for (let i = 0; i < peakmaxArray.length; i++) {
+                
+                const angle = toRadian(i * angleIncrement);
+                const r = peakmaxArray[i] * 0.15 + 50 + aprox;
+
+                const x = cx + r * Math.cos(angle);
+                const y = cy + r * Math.sin(angle);
+
+                linePointArray.push({x: x, y: y});
+            }
+
+            // Add first point again so it connects the circle
+            linePointArray.push(linePointArray[0]);
+
+            // Draw line strip
+            lineStrip(linePointArray, 'red', 5);
         }
     }
 
