@@ -184,6 +184,11 @@ function initUI() {
         } else {
             splitChannel.disabled = false;
         }
+
+        // Fix error when music is playing and you untick circleMode it enables you to tick SplitChannel
+        if (!audioPlayer.paused) {
+            splitChannel.disabled = true;
+        }
     });
 
     // Disable circleMode if splitChannel mode is running
