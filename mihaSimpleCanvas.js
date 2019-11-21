@@ -117,9 +117,8 @@ function mousePos(canvas, evt) {
 }
 
 // Maps values from one range to another
-function map(s, a1, a2, b1, b2)
-{
-	return b1 + ((s - a1) * (b2 - b1)) / (a2 - a1);
+function map(s, a1, a2, b1, b2) {
+    return b1 + ((s - a1) * (b2 - b1)) / (a2 - a1);
 }
 
 // Takes a value and returns an int
@@ -130,4 +129,21 @@ function toInt(value) {
 // Takes a string and returns an int
 function toBoolean(string) {
     return (string == "true");
+}
+
+// Takes in array that contains an object with x and y and connect those points into one line
+function lineStrip(array, colour = 'white', width = 1, corner = 'round') {
+    ctx.lineWidth = width;
+    
+    ctx.beginPath();
+    ctx.strokeStyle = colour;
+    ctx.lineJoin = corner;
+
+    ctx.moveTo(array[0].x, array[0].y);
+
+    for (let i = 1; i < array.length; i++) {
+        ctx.lineTo(array[i].x, array[i].y);
+    }
+
+    ctx.stroke();
 }
