@@ -3,7 +3,7 @@ var FFT;
 var reloaded = false;
 
 window.onload = () => {
-    createCanvas(window.innerWidth, window.innerHeight - document.querySelector('nav').clientHeight);
+    createCanvas(window.innerWidth, window.innerHeight - document.getElementById('nav-area').clientHeight);
     init();
     initUI();
 };
@@ -55,8 +55,47 @@ function loop() {
     // Draw Audio Time / PlayingOffset
     const mark = toInt(audioPlayer.currentTime);
     const total = toInt(audioPlayer.duration);
-    drawFillText(`Time: ${mark}s - ${total}s`, 16, 48, 32, 'white');
+    //drawFillText(`Time: ${mark}s - ${total}s`, 16, 48, 32, 'white');
 
+    // Setup current time
+    const cur_time = toInt(audioPlayer.currentTime);
+    let cur_minutes = toInt(cur_time / 60);
+    let cur_seconds = toInt(cur_time % 60);
+
+    // Move slider-time
+    // Check if the user is changing the position
+    // If he is stop updating
+    if (!$("#slider-time").data('clicked')) {
+        $("#slider-time").attr('max', toInt(audioPlayer.duration));
+        $("#slider-time").val(cur_time);
+    }
+
+    // Add the extra 0 infront if lower then 10
+    if (cur_minutes < 10) {
+        cur_minutes = '0' + cur_minutes.toString();
+    }
+    if (cur_seconds < 10) {
+        cur_seconds = '0' + cur_seconds.toString();
+    }
+
+    document.getElementById("current-time").textContent = `${cur_minutes}:${cur_seconds}`;
+
+    // Calculate total time
+    const total_time = audioPlayer.duration;
+    let end_minutes = toInt(total_time / 60);
+    let end_seconds = toInt(total_time % 60);
+
+    // Add the extra 0 infront if lower then 10
+    if (end_minutes < 10) {
+        end_minutes = '0' + end_minutes.toString();
+    }
+    if (end_seconds < 10) {
+        end_seconds = '0' + end_seconds.toString();
+    }
+
+    document.getElementById("end-time").textContent = `${end_minutes}:${end_seconds}`;
+
+    // Check if the song has ended
     if (mark == total && !reloaded && !audioPlayer.loop) {
         location.reload();
         reloaded = true;
@@ -73,7 +112,7 @@ function initUI() {
         const canvas = document.getElementById('canvas');
 
         // Get navbar height in pixels
-        const navBarHeight = document.querySelector('nav').clientHeight;
+        const navBarHeight = document.getElementById('nav-area').clientHeight;
 
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight - navBarHeight;
@@ -199,5 +238,19 @@ function initUI() {
         } else {
             circleMode.disabled = false;
         }
+    });
+
+    // Moving the slide-time changes song current position
+    $("#slider-time").bind('change', () => {
+        audioPlayer.currentTime = $("#slider-time").val();
+    });
+
+    // Check if mouse is pressed and released so the loop doesn't take over
+    $("#slider-time").mousedown(function () {
+        $(this).data('clicked', true);
+    });
+
+    $("#slider-time").mouseup(function () {
+        $(this).data('clicked', false);
     });
 }

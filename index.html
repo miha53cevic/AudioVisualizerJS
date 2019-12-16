@@ -58,92 +58,121 @@
         border-collapse: separate;
         border-spacing: 50px 0;
     }
+
+    #time-slider {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        align-items: center;
+        padding: 0 0.5rem 0 0.5rem;
+    }
+
+    .slider {
+        flex: 1;
+    }
+
+    .timer {
+        padding: 0.5rem;
+        color: white;
+    }
 </style>
 
 <body>
+
     <div id="canvasArea"></div>
     <div id="audioInput">
         <input type="file" id="AudioFile" accept="audio/*">
     </div>
 
-    <nav class="navbar navbar-expand-sm navbar-light bg-dark navbar-dark fixed-bottom">
-        <!-- Buttons -->
+    <div class="fixed-bottom" id="nav-area">
 
-        <!-- Volume slider -->
-        <div class="dropright">
-            <button id="volume-button" class="btn btn-lg btn-info text-white dropdown-toggle" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false"><i class="fa fa-volume-up"></i></button>
+        <!-- Time slider -->
+        <div id="time-slider" class="bg-dark">
+            <i class="timer" id="current-time">00:00</i>
+            <input class="slider" id="slider-time" type="range">
+            <i class="timer" id="end-time">00:00</i>
+        </div>
 
-            <div class="dropdown-menu text-center">
-                <input type="range" id="volume-slider" min="0" max="100" step="1" value="100" />
+        <nav class="navbar navbar-expand-sm navbar-light bg-dark navbar-dark">
+            <!-- Buttons -->
+
+            <!-- Volume slider -->
+            <div class="dropright">
+                <button id="volume-button" class="btn btn-lg btn-info text-white dropdown-toggle" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false"><i class="fa fa-volume-up"></i></button>
+
+                <div class="dropdown-menu text-center">
+                    <input type="range" id="volume-slider" min="0" max="100" step="1" value="100" />
+                </div>
             </div>
-        </div>
 
-        <!-- Play button -->
-        <div class="mx-auto">
-            <button id="play-pause-button" class="btn btn-lg btn-info text-white" data-playing="true"><i
-                    id="play-pause-icon" class="fa fa-pause"></i></button>
-        </div>
+            <!-- Play button -->
+            <div class="mx-auto">
+                <button id="play-pause-button" class="btn btn-lg btn-info text-white" data-playing="true"><i
+                        id="play-pause-icon" class="fa fa-pause"></i></button>
+            </div>
 
-        <!-- Options button -->
-        <button id="settings-button" class="btn btn-lg btn-info text-white" data-toggle="modal"
-            data-target="#optionsModal"><i class="fa fa-cog"></i></button>
+            <!-- Options button -->
+            <button id="settings-button" class="btn btn-lg btn-info text-white" data-toggle="modal"
+                data-target="#optionsModal"><i class="fa fa-cog"></i></button>
 
-        <!-- Options Modal -->
-        <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsModal"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">OPTIONS</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body text-center">
-                        <table align="center" class="SpacedTable">
-                            <tr>
-                                <td align="left">Split Channels</td>
-                                <td>
-                                    <input type="checkbox" id="SplitChannelsButton">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="left">Loop Music</td>
-                                <td>
-                                    <input type="checkbox" id="LoopMusicButton">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="left">Circle mode</td>
-                                <td>
-                                    <input type="checkbox" id="Circle-Button">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="left">Sampling Count</td>
-                                <td>
-                                    <input type="number" class="form-control" style="text-align: center" value="16384"
-                                        min="64" max="16384" step="2" id="SamplingCountButton">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="left">Quad Size</td>
-                                <td>
-                                    <input type="number" class="form-control" style="text-align: center" value="8"
-                                        min="1" max="100" step="1" id="QuadSizeButton">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            <!-- Options Modal -->
+            <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsModal"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">OPTIONS</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <table align="center" class="SpacedTable">
+                                <tr>
+                                    <td align="left">Split Channels</td>
+                                    <td>
+                                        <input type="checkbox" id="SplitChannelsButton">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">Loop Music</td>
+                                    <td>
+                                        <input type="checkbox" id="LoopMusicButton">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">Circle mode</td>
+                                    <td>
+                                        <input type="checkbox" id="Circle-Button">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">Sampling Count</td>
+                                    <td>
+                                        <input type="number" class="form-control" style="text-align: center"
+                                            value="16384" min="64" max="16384" step="2" id="SamplingCountButton">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="left">Quad Size</td>
+                                    <td>
+                                        <input type="number" class="form-control" style="text-align: center" value="8"
+                                            min="1" max="100" step="1" id="QuadSizeButton">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </nav>
 
-    </nav>
+    </div>
+
 </body>
 
 </html>
