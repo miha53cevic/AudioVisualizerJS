@@ -254,13 +254,6 @@ class fft {
             clear('rgb(51,51,51)');
 
             // Visualize the magnitudes
-            // Circle formula: x = cx + r * cos(x), y = cy + r * sin(x) ---> cx ili cy = translacija od 0,0
-
-            const cx = WIDTH / 2;
-            const cy = HEIGHT / 2;
-            const angleIncrement = 360 / peakmaxArray.length;
-
-            let linePointArray = [];
 
             // Uzmi prosjek i dodaj ga radijusu kruga
             let aprox = 0;
@@ -269,22 +262,13 @@ class fft {
             }
             aprox /= peakmaxArray.length;
 
-            for (let i = 0; i < peakmaxArray.length; i++) {
-                
-                const angle = toRadian(i * angleIncrement);
-                const r = peakmaxArray[i] * 0.15 + 50 + aprox;
+            // Scale the peaks
+            peakmaxArray.forEach((name, index) => {
+                peakmaxArray[index] *= 0.15;
+            });
 
-                const x = cx + r * Math.cos(angle);
-                const y = cy + r * Math.sin(angle);
-
-                linePointArray.push({x: x, y: y});
-            }
-
-            // Add first point again so it connects the circle
-            linePointArray.push(linePointArray[0]);
-
-            // Draw line strip
-            lineStrip(linePointArray, 'red', 5);
+            // Draw the rectCircleStrip
+            rectCircleStrip(WIDTH, HEIGHT, peakmaxArray, 'red', 50 + aprox, this.QUAD_SIZE);
         }
     }
 
