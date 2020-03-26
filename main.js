@@ -240,6 +240,9 @@ function initUI() {
         }
     });
 
+    // Start on Zero / NULL
+    $("#slider-time").val(0);
+
     // Moving the slide-time changes song current position
     $("#slider-time").bind('change', () => {
         audioPlayer.currentTime = $("#slider-time").val();

@@ -75,6 +75,51 @@
         padding: 0.5rem;
         color: white;
     }
+
+    .slider-css {
+        /* Override default CSS styles */
+        -webkit-appearance: none;
+        width: 100%;
+        height: 5px;
+        border-radius: 5px;
+        background: grey;
+        outline: none;
+    }
+
+    .slider-css::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: white;
+        cursor: pointer;
+    }
+
+    #volume-slider {
+        /* Override default CSS styles */
+        -webkit-appearance: none;
+        width: 100%;
+        height: 5px;
+        border-radius: 5px;
+        background: rgb(190, 190, 190);
+        outline: none;
+    }
+
+    #volume-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #17A2B8;
+        cursor: pointer;
+    }
+
+    .dropdown-menu {
+        padding-right: 1rem;
+        height: 3rem;
+    }
 </style>
 
 <body>
@@ -89,7 +134,7 @@
         <!-- Time slider -->
         <div id="time-slider" class="bg-dark">
             <i class="timer" id="current-time">00:00</i>
-            <input class="slider" id="slider-time" type="range">
+            <input class="slider slider-css" id="slider-time" type="range">
             <i class="timer" id="end-time">00:00</i>
         </div>
 
