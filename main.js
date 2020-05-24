@@ -136,11 +136,13 @@ function initUI() {
         if (playButton.dataset.playing === 'true') {
             playButton.dataset.playing = 'false'
             icon.className = 'fa fa-play';
-            audioPlayer.pause();
+            if (audioPlayer.src != '')
+                audioPlayer.pause();
         } else {
             playButton.dataset.playing = 'true';
             icon.className = 'fa fa-pause';
-            audioPlayer.play();
+            if (audioPlayer.src != '')
+                audioPlayer.play();
         }
     });
 

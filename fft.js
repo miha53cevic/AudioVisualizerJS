@@ -16,7 +16,7 @@ class fft {
 
     init(arrayBuffer) {
 
-        // init forom here because of autoplay policy
+        // init from here because of autoplay policy
         this.audioContext = new AudioContext();
 
         // BufferSource will hold audio data
