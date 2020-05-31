@@ -55,46 +55,58 @@ class fft {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    getPeakMaxArray() {
+        // Get first data bin position for current time in the song
+        // example: 5 seconds * 44100(sampleRate) means that our starting position is 220500 
+        //          and then we take N number of bins from that position onward
+        const mark = Number.parseInt((this.audioPlayer.currentTime * this.source.buffer.sampleRate).toString());
+
+        let input = Array();
+
+        // Fill in input
+        for (let i = 0; i < this.N; i++) {
+
+            let index = i + mark;
+
+            // Hamming window the input for smoother input values
+            let sample = this.data[index] * (0.54 - (0.46 * Math.cos(2.0 * Math.PI * (i / ((this.N - 1) * 1.0)))));
+
+            // Windowed sample or signal
+            input.push(sample);
+        }
+
+        // Calculate fft
+        const output = this.cfft(input);
+
+        let peakmaxArray = [];
+
+        // Calculate the magnitudes
+        /* Only half of the data is useful */
+        for (let i = 0; i < (this.N / 2) + 1; i++) {
+
+            // bin frequency = binNumber * sampleRate / N
+            let freq = i * this.source.buffer.sampleRate / this.N;
+            let magnitude = output[i].magnitude();
+
+            // Extract the peaks from defined frequency ranges
+            for (let j = 0; j < this.freq_bin.length - 1; j++) {
+                if ((freq > this.freq_bin[j]) && (freq <= this.freq_bin[j + 1])) {
+                    peakmaxArray.push(magnitude);
+                }
+            }
+        }
+
+        return peakmaxArray;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     render() {
 
         // Only if this.audioPlayer has started run
         if (!this.audioPlayer.paused || this.audioPlayer.currentTime) {
 
-            const mark = Number.parseInt((this.audioPlayer.currentTime * this.source.buffer.sampleRate).toString());
-
-            let input = Array();
-
-            // Fill in input
-            for (let i = 0; i < this.N; i++) {
-
-                let index = i + mark;
-
-                // Hamming window the input
-                let sample = this.data[index] * (0.54 - (0.46 * Math.cos(2.0 * Math.PI * (i / ((this.N - 1) * 1.0)))));
-
-                // Windowed sample / signal
-                input.push(sample);
-            }
-
-            // Calculate fft
-            const output = this.cfft(input);
-
-            let peakmaxArray = [];
-
-            // Calculate the magnitudes
-            /* Only half of the data is useful */
-            for (let i = 0; i < (this.N / 2) + 1; i++) {
-
-                let freq = i * this.source.buffer.sampleRate / this.N;
-                let magnitude = output[i].magnitude();
-
-                // Extract the peaks from defined frequency ranges
-                for (let j = 0; j < this.freq_bin.length - 1; j++) {
-                    if ((freq > this.freq_bin[j]) && (freq <= this.freq_bin[j + 1])) {
-                        peakmaxArray.push(magnitude);
-                    }
-                }
-            }
+            let peakmaxArray = this.getPeakMaxArray();
 
             clear('rgb(51,51,51)');
 
@@ -215,41 +227,7 @@ class fft {
         // Only if this.audioPlayer has started run
         if (!this.audioPlayer.paused || this.audioPlayer.currentTime) {
 
-            const mark = Number.parseInt((this.audioPlayer.currentTime * this.source.buffer.sampleRate).toString());
-
-            let input = Array();
-
-            // Fill in input
-            for (let i = 0; i < this.N; i++) {
-
-                let index = i + mark;
-
-                // Hamming window the input
-                let sample = this.data[index] * (0.54 - (0.46 * Math.cos(2.0 * Math.PI * (i / ((this.N - 1) * 1.0)))));
-
-                // Windowed sample / signal
-                input.push(sample);
-            }
-
-            // Calculate fft
-            const output = this.cfft(input);
-
-            let peakmaxArray = [];
-
-            // Calculate the magnitudes
-            /* Only half of the data is useful */
-            for (let i = 0; i < (this.N / 2) + 1; i++) {
-
-                let freq = i * this.source.buffer.sampleRate / this.N;
-                let magnitude = output[i].magnitude();
-
-                // Extract the peaks from defined frequency ranges
-                for (let j = 0; j < this.freq_bin.length - 1; j++) {
-                    if ((freq > this.freq_bin[j]) && (freq <= this.freq_bin[j + 1])) {
-                        peakmaxArray.push(magnitude);
-                    }
-                }
-            }
+            let peakmaxArray = this.getPeakMaxArray();
 
             clear('rgb(51,51,51)');
 
